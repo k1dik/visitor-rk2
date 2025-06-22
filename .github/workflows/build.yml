@@ -40,7 +40,7 @@ jobs:
         fpm -s dir -t deb -n visitor-app -v 1.0 usr/local/bin/visitor_app
 
     - name: Upload DEB package
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: visitor-app
         path: build/*.deb
