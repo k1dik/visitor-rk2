@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/ch1psik/rk2/build/cmake_install.cmake",
+		"/home/ch1psik/rk2/build/tests/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -1,0 +1,42 @@
+name: CMake Build and DEB package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: sudo apt update && sudo apt install -y cmake g++ libgtest-dev ninja-build
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        make
+
+    - name: Run Tests
+      run: |
+        cd build
+        ctest --output-on-failure
+
+    - name: Create DEB package
+      run: |
+        mkdir -p build/deb/usr/local/bin
+        cp build/main_exec build/deb/usr/local/bin/visitor_app
+        cd build
+        fpm -s dir -t deb -n visitor-app -v 1.0 usr/local/bin/visitor_app
+
+    - name: Upload DEB package
+      uses: actions/upload-artifact@v3
+      with:
+        name: visitor-app
+        path: build/*.deb
