@@ -14,7 +14,10 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install dependencies
-      run: sudo apt update && sudo apt install -y cmake g++ libgtest-dev ninja-build
+      run: |
+        sudo apt update
+        sudo apt install -y cmake g++ libgtest-dev ninja-build ruby ruby-dev build-essential
+        sudo gem install --no-document fpm
 
     - name: Build
       run: |
@@ -37,7 +40,7 @@ jobs:
         fpm -s dir -t deb -n visitor-app -v 1.0 usr/local/bin/visitor_app
 
     - name: Upload DEB package
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: visitor-app
         path: build/*.deb
