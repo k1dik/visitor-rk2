@@ -45,18 +45,18 @@ jobs:
         cp build/main_exec build/deb/usr/local/bin/visitor_app
         cp build/main_exec build/rpm/usr/local/bin/visitor_app
 
-- name: Create DEB package
-  run: |
-    mkdir -p build/deb/DEBIAN
-    echo "Package: visitor-app" > build/deb/DEBIAN/control
-    echo "Version: 1.0.0" >> build/deb/DEBIAN/control
-    echo "Section: base" >> build/deb/DEBIAN/control
-    echo "Priority: optional" >> build/deb/DEBIAN/control
-    echo "Architecture: amd64" >> build/deb/DEBIAN/control
-    echo "Maintainer: Your Name <you@example.com>" >> build/deb/DEBIAN/control
-    echo "Description: Visitor App" >> build/deb/DEBIAN/control
+    - name: Create DEB package
+      run: |
+        mkdir -p build/deb/DEBIAN
+        echo "Package: visitor-app" > build/deb/DEBIAN/control
+        echo "Version: 1.0.0" >> build/deb/DEBIAN/control
+        echo "Section: base" >> build/deb/DEBIAN/control
+        echo "Priority: optional" >> build/deb/DEBIAN/control
+        echo "Architecture: amd64" >> build/deb/DEBIAN/control
+        echo "Maintainer: Your Name <you@example.com>" >> build/deb/DEBIAN/control
+        echo "Description: Visitor App" >> build/deb/DEBIAN/control
 
-    dpkg-deb --build build/deb build/visitor_app.deb
+      dpkg-deb --build build/deb build/visitor_app.deb
     - name: Create RPM package
       run: |
         fpm -s dir -t rpm -n visitor-app -v 1.0.0 --prefix=/ -C build/rpm .
