@@ -1,2 +1,0 @@
-/usr/bin/ar qc libvisitor.a CMakeFiles/visitor.dir/src/ConcreteElementA.cpp.o CMakeFiles/visitor.dir/src/ConcreteElementB.cpp.o CMakeFiles/visitor.dir/src/ConcreteElementC.cpp.o CMakeFiles/visitor.dir/src/ConcreteVisitor.cpp.o
-/usr/bin/ranlib libvisitor.a
