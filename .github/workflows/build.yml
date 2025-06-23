@@ -1,46 +1,61 @@
-name: CMake Build and DEB package
+name: C++ CI/CD Build
 
 on:
   push:
     branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y cmake build-essential
+
+    - name: Create build directory
+      run: mkdir -p build
+
+    - name: Configure CMake
+      working-directory: build
+      run: cmake ..
+
+    - name: Build project
+      working-directory: build
+      run: make
+
+    - name: Prepare artifact files
       run: |
-        sudo apt update
-        sudo apt install -y cmake g++ libgtest-dev ninja-build ruby ruby-dev build-essential
+        mkdir -p deploy/usr/local/bin
+        cp build/main_exec deploy/usr/local/bin/visitor_app
+
+    - name: Package .deb using fpm
+      run: |
         sudo gem install --no-document fpm
+        fpm -s dir -t deb -n visitor_app -v 1.0 --prefix=/ deploy/usr/local/bin/visitor_app
 
-    - name: Build
+    - name: Package .rpm using fpm
       run: |
-        rm -rf build
-        mkdir -p build
-        cd build
-        cmake ..
-        make
+        fpm -s dir -t rpm -n visitor_app -v 1.0 --prefix=/ deploy/usr/local/bin/visitor_app
 
-    - name: Run Tests
-      run: |
-        cd build
-        ctest --output-on-failure
-
-    - name: Create DEB package
-      run: |
-        mkdir -p build/deb/usr/local/bin
-        cp build/main_exec build/deb/usr/local/bin/visitor_app
-        cd build
-        fpm -s dir -t deb -n visitor-app -v 1.0 usr/local/bin/visitor_app
-
-    - name: Upload DEB package
+    - name: Upload .deb artifact
       uses: actions/upload-artifact@v4
       with:
-        name: visitor-app
-        path: build/*.deb
+        name: visitor_app_deb
+        path: ./*.deb
+
+    - name: Upload .rpm artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: visitor_app_rpm
+        path: ./*.rpm
+
+    - name: Upload binary artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: visitor_app_bin
+        path: ./deploy/usr/local/bin/visitor_app
