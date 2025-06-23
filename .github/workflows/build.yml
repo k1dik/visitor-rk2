@@ -3,11 +3,10 @@ name: CMake CI/CD Workflow
 on:
   push:
     tags:
-      - 'v*.*.*'    # на каждый git tag вида v1.0.0
-  pull_request:
-  push:
+      - 'v*.*.*'
     branches:
       - main
+  pull_request:
 
 jobs:
   build_and_test:
@@ -58,6 +57,7 @@ Architecture: amd64
 Maintainer: Your Name <you@example.com>
 Description: Visitor App
 EOF
+
         dpkg-deb --build build/deb build/visitor_app.deb
 
     - name: Create RPM package
